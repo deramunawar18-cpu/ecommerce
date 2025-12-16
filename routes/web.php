@@ -18,3 +18,4 @@ Route::get('/sapa/{nama}', function ($nama) {
 Route::get('/kategori/{nama?}', function ($nama = 'Selamat berbelanja') {
     return "Menampilkan Cuy toko: $nama";
 });
+
