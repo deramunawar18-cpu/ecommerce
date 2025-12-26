@@ -75,13 +75,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Total Item</span>
-                            <span>{{ $cart->sum('quantity') }}</span>
+                            <span>{{ $cart->items->sum('quantity') }}</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
                             <span class="fw-bold">Total</span>
                             <span class="fw-bold text-primary fs-5">
-                                Rp {{ number_format($cart->sum('subtotal'), 0, ',', '.') }}
+                               Rp {{ number_format($cart->items->sum('subtotal'), 0, ',', '.') }}
                             </span>
                         </div>
                         <a href="{{ route('catalog.index') }}" class="btn btn-outline-secondary w-100 mt-2">
