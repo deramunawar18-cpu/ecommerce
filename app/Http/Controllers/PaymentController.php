@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class PaymentController extends Controller
 {
@@ -37,7 +39,29 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return view('orders.show', compact('order', 'snapToken'));
     }
+
+    public function show(Order $order, MidtransService $midtransService)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($order->status === 'pending' && !$order->snap_token) {
+            $snapToken = $midtransService->createSnapToken($order);
+            $order->update(['snap_token' => $snapToken]);
+        }
+
+        return view('orders.show', compact('order'));
+    }
+
+    public function success(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+        return view('orders.success', compact('order'));
+    }
+
+
 }

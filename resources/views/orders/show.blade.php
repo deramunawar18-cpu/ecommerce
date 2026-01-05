@@ -108,7 +108,7 @@
                 </div>
 
                 {{-- Tombol Bayar (hanya tampil jika pending) --}}
-                @if($order->status === 'pending' && $snapToken)
+                @if($order->status === 'pending' && $order->snap_token)
                 <div class="card-body bg-primary bg-opacity-10 border-top text-center p-4">
                     <p class="text-muted mb-3">
                         Selesaikan pembayaran Anda sebelum batas waktu berakhir.
@@ -127,7 +127,7 @@
 @endsection
 
 {{-- Snap.js Integration --}}
-@if($snapToken)
+@if($order->snap_token)
 @push('scripts')
     {{-- Load Snap JS dari Midtrans --}}
     <script src="{{ config('midtrans.snap_url') }}"
@@ -144,7 +144,7 @@
                     payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Memproses...';
 
                     // Panggil Snap.pay dengan token dari server
-                    window.snap.pay('{{ $snapToken }}', {
+                    window.snap.pay('{{ $order->snap_token }}', {
 
                         // ✅ Callback saat pembayaran SUKSES
                         onSuccess: function(result) {
