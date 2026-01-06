@@ -12,9 +12,11 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MidtransNotificationController;
 use App\Http\Controllers\Admin\DashboardController;
+
 
 
 
@@ -59,13 +61,13 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
 
         // /admin/dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard');
+        // Route::get('/', [DashboardController::class, 'index'])
+        //     ->name('dashboard');
         // ↑ Nama lengkap route: admin.dashboard
         // ↑ URL: /admin/dashboard
 
         // CRUD Produk: /admin/products, /admin/products/create, dll
-        Route::resource('/products', AdminProductController::class);
+        // Route::resource('/products', AdminProductController::class);
         // ↑ resource() membuat 7 route sekaligus:
         // - GET    /admin/products          → index   (admin.products.index)
         // - GET    /admin/products/create   → create  (admin.products.create)
@@ -75,7 +77,27 @@ Route::middleware(['auth', 'admin'])
         // - PUT    /admin/products/{id}     → update  (admin.products.update)
         // - DELETE /admin/products/{id}     → destroy (admin.products.destroy)
 });
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Produk CRUD
+
+    // Kategori CRUD
+    Route::resource('categories', AdminCategoryController::class);
+
+    // Manajemen Pesanan
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+     Route::resource('categories', CategoryController::class)->except(['show']); // Kategori biasanya tidak butuh show detail page
+
+    // Produk
+    Route::resource('products', ProductsController::class)->except(['show']);
+    Route::get('/reports', [ReportController::class, 'sales'])->name('reports.sales');
+        Route::get('/reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.export-sales');
+});
 // ========================================
 // FILE: routes/web.php (tambahan untuk Google OAuth)
 // ========================================
@@ -160,25 +182,7 @@ Route::middleware('auth')->group(function () {
 // HALAMAN ADMIN (Butuh Login + Role Admin)
 // ================================================
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
-    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Produk CRUD
-
-    // Kategori CRUD
-    Route::resource('categories', AdminCategoryController::class);
-
-    // Manajemen Pesanan
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
-
-     Route::resource('categories', CategoryController::class)->except(['show']); // Kategori biasanya tidak butuh show detail page
-
-    // Produk
-    Route::resource('products', ProductsController::class)->except(['show']);
-});
 
 
 // ================================================
@@ -282,3 +286,17 @@ Route::middleware('auth')->group(function () {
 // ============================================================
 Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
+
+
+    // #TEST EMAIL
+
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-email', function () {
+    Mail::raw('Halo, ini adalah email percobaan dari Laravel 12 ke Mailtrap!', function ($message) {
+        $message->to('test@example.com')
+            ->subject('Test Koneksi Mailtrap');
+    });
+
+    return "Email berhasil dikirim! Silakan cek dashboard Mailtrap Anda.";
+});
