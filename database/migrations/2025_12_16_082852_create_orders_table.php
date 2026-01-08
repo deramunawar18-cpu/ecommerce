@@ -32,7 +32,8 @@ return new class extends Migration
                 'processing',   // Pembayaran diterima, sedang diproses
                 'shipped',      // Sudah dikirim
                 'delivered',    // Sudah diterima
-                'cancelled'     // Dibatalkan
+                'cancelled',     // Dibatalkan
+                'completed'     // Selesai
             ])->default('pending');
 
             // Alamat pengiriman (snapshot saat order)

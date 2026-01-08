@@ -11,6 +11,7 @@
                         <tr>
                             <th>No. Order</th>
                             <th>Tanggal</th>
+                            <th>Payment status</th>
                             <th>Status</th>
                             <th>Total</th>
                             <th class="text-end">Aksi</th>
@@ -21,6 +22,12 @@
                         <tr>
                             <td class="fw-bold text-primary">#{{ $order->order_number }}</td>
                             <td>{{ $order->created_at->format('d M Y H:i') }}</td>
+                            <td>
+                                @if($order->payment_status == 'paid')
+                                    <span class="badge bg-success">Lunas</span>
+                                @else
+                                    <span class="badge bg-danger">Belum Lunas</span>
+                                @endif
                             <td>
                                 <span class="badge
                                     @if($order->status == 'pending') bg-warning text-dark

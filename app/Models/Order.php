@@ -18,6 +18,7 @@ class Order extends Model
         'shipping_phone',
         'shipping_address',
         'snap_token',
+        'payment_status',
         'status',
     ];
 

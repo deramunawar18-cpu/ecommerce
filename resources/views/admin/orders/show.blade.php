@@ -59,6 +59,7 @@
                             <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing (Sedang Dikemas)</option>
                             <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed (Selesai/Dikirim)</option>
                             <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled (Batalkan & Restock)</option>
+                            
                         </select>
                     </div>
 
