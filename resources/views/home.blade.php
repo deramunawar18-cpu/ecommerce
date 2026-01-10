@@ -1,6 +1,6 @@
 {{-- ================================================
      FILE: resources/views/home.blade.php
-     FUNGSI: Halaman utama website
+     FUNGSI: Halaman utama website dengan Video Background
      ================================================ --}}
 
 @extends('layouts.app')
@@ -9,12 +9,36 @@
 
 @push('styles')
 <style>
-    /* Hero Section Styles */
+    /* Hero Section Styles dengan Video Background */
     .hero-distro {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         position: relative;
         overflow: hidden;
         min-height: 600px;
+    }
+
+    /* Video Background */
+    .hero-video-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translateX(-50%) translateY(-50%);
+        z-index: 0;
+        object-fit: cover;
+    }
+
+    /* Overlay gelap di atas video */
+    .hero-video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.85) 0%, rgba(22, 33, 62, 0.85) 50%, rgba(15, 52, 96, 0.85) 100%);
+        z-index: 1;
     }
 
     .hero-distro::before {
@@ -27,6 +51,7 @@
         background-image:
             repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px);
         opacity: 0.5;
+        z-index: 1;
     }
 
     .hero-distro::after {
@@ -36,8 +61,9 @@
         right: -10%;
         width: 600px;
         height: 600px;
-        background: radial-gradient(circle, rgba(230, 126, 34, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(230, 126, 34, 0.15) 0%, transparent 70%);
         border-radius: 50%;
+        z-index: 1;
     }
 
     .hero-content {
@@ -152,6 +178,7 @@
     /* Hero Image */
     .hero-image-wrapper {
         position: relative;
+        z-index: 2;
         animation: float 4s ease-in-out infinite;
     }
 
@@ -418,9 +445,19 @@
 @endpush
 
 @section('content')
-    {{-- Hero Section - Distro Theme --}}
+    {{-- Hero Section dengan Video Background --}}
     <section class="hero-distro text-white py-5">
-        <div class="container py-5">
+        {{-- Video Background --}}
+        <video autoplay muted loop playsinline class="hero-video-bg">
+            <source src="{{ asset('videos/hero-background.mp4') }}" type="video/mp4">
+            <source src="{{ asset('./storage/products/From KlickPin CF Official merch for official fans since 1987 [Video] _ T shirts with sayings Graphic design lessons Tshirts online.mp4') }}" type="video/webm">
+            <!-- Fallback jika video tidak support -->
+        </video>
+
+        {{-- Overlay --}}
+        <div class="hero-video-overlay"></div>
+
+        <div class="container py-5" style="position: relative; z-index: 2;">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="hero-content">
